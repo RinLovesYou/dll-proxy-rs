@@ -1,0 +1,20 @@
+[package]
+name = "proxy"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[dependencies.syn]
+version = "1.0.103"
+features = ["full", "parsing", "printing", "proc-macro"]
+default-features = false
+
+[target.'cfg(windows)'.dependencies]
+proxy-sys = { path = "../proxy-sys" }
+
+[lib]
+name = "proxy"
+proc-macro = true
