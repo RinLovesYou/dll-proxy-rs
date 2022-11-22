@@ -160,7 +160,7 @@ name = "demo"
 version = "0.1.0"
 dependencies = [
  "msgbox",
- "proxy-dll 0.2.1",
+ "proxy-dll",
 ]
 
 [[package]]
@@ -597,18 +597,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-dll"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cece7deb3efd7c8d163aaf6e53a094921640b2a1271734689dc4b19355f039b8"
-dependencies = [
- "proxy-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "thiserror",
- "winapi",
-]
-
-[[package]]
-name = "proxy-dll"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "proxy-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
