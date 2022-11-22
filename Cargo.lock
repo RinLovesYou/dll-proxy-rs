@@ -7,7 +7,7 @@ name = "example"
 version = "0.1.0"
 dependencies = [
  "proxy",
- "proxy-sys",
+ "proxy-sys 0.1.1",
  "winapi",
 ]
 
@@ -30,12 +30,24 @@ dependencies = [
 name = "proxy"
 version = "0.1.0"
 dependencies = [
+ "proxy-sys 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn",
 ]
 
 [[package]]
 name = "proxy-sys"
 version = "0.1.1"
+dependencies = [
+ "lazy_static",
+ "thiserror",
+ "winapi",
+]
+
+[[package]]
+name = "proxy-sys"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9e0707a23309cb039457acee2d1820cdeaed0c2be723328989f829edb8ece4a7"
 dependencies = [
  "lazy_static",
  "thiserror",
