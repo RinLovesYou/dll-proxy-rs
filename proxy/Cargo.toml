@@ -11,8 +11,8 @@ readme = "../README.md"
 
 [dependencies]
 thiserror = "1.0.37"
-proxy-sys = { path = "../proxy-sys" }
-msgbox = "*"
+proxy-sys = "0.2.0"
+msgbox = "0.7.0"
 
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3.9", features = ["winuser", "minwindef", "std", "libloaderapi"] }

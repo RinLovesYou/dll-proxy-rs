@@ -600,7 +600,7 @@ name = "proxy-dll"
 version = "0.2.0"
 dependencies = [
  "msgbox",
- "proxy-sys",
+ "proxy-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
  "winapi",
 ]
@@ -608,6 +608,15 @@ dependencies = [
 [[package]]
 name = "proxy-sys"
 version = "0.2.0"
+dependencies = [
+ "syn",
+]
+
+[[package]]
+name = "proxy-sys"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb042b33287590b68500ae9f85b5e9dd852821940ea80be71b72edd18215bc76"
 dependencies = [
  "syn",
 ]
