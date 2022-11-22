@@ -16,19 +16,19 @@ static mut OriginalFuncs_winhttp: [FARPROC; 65] = [0 as FARPROC; 65];
 static mut OriginalFuncs_winmm: [FARPROC; 181] = [0 as FARPROC; 181];
 
 #[cfg(target_pointer_width = "64")]
-global_asm!(include_str!("deps/version.x64.S"));
+global_asm!(include_str!("../deps/version.x64.S"));
 #[cfg(target_pointer_width = "32")]
-global_asm!(include_str!("deps/version.x86.S"));
+global_asm!(include_str!("../deps/version.x86.S"));
 
 #[cfg(target_pointer_width = "64")]
-global_asm!(include_str!("deps/winhttp.x64.S"));
+global_asm!(include_str!("../deps/winhttp.x64.S"));
 #[cfg(target_pointer_width = "32")]
-global_asm!(include_str!("deps/winhttp.x86.S"));
+global_asm!(include_str!("../deps/winhttp.x86.S"));
 
 #[cfg(target_pointer_width = "64")]
-global_asm!(include_str!("deps/winmm.x64.S"));
+global_asm!(include_str!("../deps/winmm.x64.S"));
 #[cfg(target_pointer_width = "32")]
-global_asm!(include_str!("deps/winmm.x86.S"));
+global_asm!(include_str!("../deps/winmm.x86.S"));
 
 #[derive(Debug, Error)]
 enum ExportError {

@@ -6,11 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-proxy-sys = { path = "../proxy-sys" }
 proxy = { path = "../proxy" }
 
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3.9", features = ["winuser", "minwindef", "std", "libloaderapi"] }
+proxy-sys = { path = "../proxy-sys" }
 
 [lib]
 crate-type = ["cdylib"]

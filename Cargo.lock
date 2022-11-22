@@ -30,13 +30,12 @@ dependencies = [
 name = "proxy"
 version = "0.1.0"
 dependencies = [
- "proxy-sys",
  "syn",
 ]
 
 [[package]]
 name = "proxy-sys"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "lazy_static",
  "thiserror",
