@@ -1,3 +1,5 @@
+//! all the logic for exporting the functions.
+
 use std::{error, arch::global_asm, path::PathBuf, str::FromStr, ffi::{CString, CStr}};
 
 use lazy_static::lazy_static;
@@ -32,8 +34,6 @@ global_asm!(include_str!("deps/winmm.x86.S"));
 enum ExportError {
     #[error("Failed to load library")]
     LoadLibrary,
-    #[error("Failed to get function address")]
-    GetProcAddress,
     #[error("Failed to get module path")]
     GetModulePath,
     #[error("Failed to get module name")]
@@ -61,36 +61,6 @@ lazy_static!{
 		b"VerLanguageNameW\0",
 		b"VerQueryValueA\0",
 		b"VerQueryValueW\0"
-	];
-
-	static ref EXPORTS_PSAPI: Vec<&'static [u8]> = vec![
-		b"EmptyWorkingSet\0",
-		b"EnumDeviceDrivers\0",
-		b"EnumPageFilesA\0",
-		b"EnumPageFilesW\0",
-		b"EnumProcessModules\0",
-		b"EnumProcessModulesEx\0",
-		b"EnumProcesses\0",
-		b"GetDeviceDriverBaseNameA\0",
-		b"GetDeviceDriverBaseNameW\0",
-		b"GetDeviceDriverFileNameA\0",
-		b"GetDeviceDriverFileNameW\0",
-		b"GetMappedFileNameA\0",
-		b"GetMappedFileNameW\0",
-		b"GetModuleBaseNameA\0",
-		b"GetModuleBaseNameW\0",
-		b"GetModuleFileNameExA\0",
-		b"GetModuleFileNameExW\0",
-		b"GetModuleInformation\0",
-		b"GetPerformanceInfo\0",
-		b"GetProcessImageFileNameA\0",
-		b"GetProcessImageFileNameW\0",
-		b"GetProcessMemoryInfo\0",
-		b"GetWsChanges\0",
-		b"GetWsChangesEx\0",
-		b"InitializeProcessForWsWatch\0",
-		b"QueryWorkingSet\0",
-		b"QueryWorkingSetEx\0"
 	];
 
 	static ref EXPORTS_WINHTTP: Vec<&'static [u8]> = vec![
@@ -309,10 +279,15 @@ lazy_static!{
 }
 
 
+/// A few helper functions for HINSTANCE
 pub trait ProxyDll {
+	/// retrieves the path of the module
     fn get_path(&self) -> Result<PathBuf, Box<dyn error::Error>>;
+	/// retrieves the name of the module
     fn get_file_name(&self) -> Result<String, Box<dyn error::Error>>;
+	/// checks if the current name is a supported system dll
     fn is_compatible(&self) -> Result<bool, Box<dyn error::Error>>;
+	/// loads the original dll from system32
     fn load_original(&self) -> Result<HINSTANCE, Box<dyn error::Error>>;
 }
 
@@ -373,6 +348,7 @@ impl ProxyDll for HINSTANCE {
     }
 }
 
+/// initializes the exports
 pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
     if module.is_null() {
         return Err(Box::new(ExportError::LoadLibrary));

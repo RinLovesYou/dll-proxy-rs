@@ -1,7 +1,12 @@
 [package]
 name = "proxy-sys"
 version = "0.1.0"
+authors = ["RinLovesYou"]
 edition = "2021"
+description = "A dynamic Windows System DLL proxy"
+repository = "https://github.com/RinLovesYou/dll-proxy-rs"
+license = "GPL-2.0"
+readme = "../README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
