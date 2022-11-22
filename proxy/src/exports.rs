@@ -350,7 +350,18 @@ impl ProxyDll for HINSTANCE {
     }
 }
 
-fn init(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
+/// initializes the exports for the proxy
+/// 
+/// this happens by calling `GetModuleFileName`, to find out which DLL we're trying to proxy
+/// if it's one we support, we load it from system32 and then call `GetProcAddress` on all the
+/// functions we want to proxy, those are stored in a static array, which is accessed by `global_asm!`
+/// 
+/// if the DLL is not supported, we return an error
+/// 
+/// # Safety
+/// 
+/// this function is unsafe.
+pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
     if module.is_null() {
         return Err(Box::new(ExportError::LoadLibrary));
     }
@@ -387,9 +398,4 @@ fn init(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
     }
 
     Ok(())
-}
-
-/// initializes the exports
-pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
-    init(module)
 }
