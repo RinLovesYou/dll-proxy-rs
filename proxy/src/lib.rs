@@ -1,6 +1,30 @@
-//! A Dynamic DLL Proxy written in Rust.
+//! A Macro for defining an entry point for a cdylib.
 //!
-//! These are the internals of the Proxy macro.
+//! On Windows, this macro will wrap your function in DllMain, and call it when the DLL attaches.
+//! It will lookup exports of supported proxies, based on our own Module Name, and store them.
+//! Effectively, creating a dynamic proxy that we could add any number of supported proxies to.
+//!
+//! # Supported Targets
+//!
+//! - Windows
+//!     - `x86_64-pc-windows-msvc`
+//!     - `i686-pc-windows-msvc`
+//!
+//!
+//! # Example
+//!
+//! ```
+//! use proxy_dll::proxy;
+//!
+//! #[proxy]
+//! fn main() {
+//!    msgbox::create("Hello, world!", "Hello Rust", msgbox::IconType::None).unwrap();
+//! }
+//! ```
+//!
+//! # Safety
+//!
+//! This crate is pretty unsafe
 
 #![feature(naked_functions)]
 #![feature(asm_const)]

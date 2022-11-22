@@ -1,6 +1,6 @@
 [package]
 name = "proxy-dll"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["RinLovesYou"]
 edition = "2021"
 description = "A dynamic Windows System DLL proxy"
@@ -11,10 +11,13 @@ readme = "../README.md"
 
 [dependencies]
 thiserror = "1.0.37"
-proxy-sys = "0.2.0"
+proxy-sys = { path = "../proxy-sys" }
 
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3.9", features = ["winuser", "minwindef", "std", "libloaderapi"] }
+
+[target.'cfg(linux)'.dependencies]
+ctor = "0.1.26"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
