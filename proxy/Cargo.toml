@@ -1,5 +1,5 @@
 [package]
-name = "proxy"
+name = "proxy-dll"
 version = "0.1.0"
 authors = ["RinLovesYou"]
 edition = "2021"

@@ -3,15 +3,6 @@
 version = 3
 
 [[package]]
-name = "example"
-version = "0.1.0"
-dependencies = [
- "proxy",
- "proxy-sys 0.1.1",
- "winapi",
-]
-
-[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -27,7 +18,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "proxy"
+name = "proxy-dll"
 version = "0.1.0"
 dependencies = [
  "proxy-sys 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
