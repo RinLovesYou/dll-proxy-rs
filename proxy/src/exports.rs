@@ -4,7 +4,7 @@ use std::{
     arch::global_asm,
     error,
     ffi::{CStr, CString},
-    path::{PathBuf, Path}, process,
+    path::{PathBuf, Path},
 };
 
 use thiserror::Error;
@@ -391,10 +391,5 @@ fn init(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
 
 /// initializes the exports
 pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
-    let _ = init(module).unwrap_or_else(|e| {
-        let _ = msgbox::create("Error", &format!("{}", e), msgbox::IconType::Error);
-        process::exit(1);
-    });
-
-    Ok(())
+    init(module)
 }
