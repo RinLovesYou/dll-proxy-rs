@@ -1,52 +1,29 @@
-use syn::__private::{TokenStream, quote::quote};
+//! A Dynamic DLL Proxy written in Rust.
+//!
+//! These are the internals of the Proxy macro.
 
-#[proc_macro_attribute]
-pub fn proxy(_attribute: TokenStream, function: TokenStream) -> TokenStream {
-    let fn_ts = function.clone();
-    let item: syn::Item = syn::parse_macro_input!(fn_ts);
-    if let syn::Item::Fn(function) = item {
-        let syn::ItemFn {
-            attrs,
-            block,
-            vis,
-            sig:
-                syn::Signature {
-                    ident,
-                    unsafety,
-                    constness,
-                    abi,
-                    output,
-                    ..
-                },
-            ..
-        } = function;
+#![feature(naked_functions)]
+#![feature(asm_const)]
+#![deny(
+    missing_debug_implementations,
+    missing_docs,
+    unused_results,
+    warnings,
+    clippy::extra_unused_lifetimes,
+    clippy::from_over_into,
+    clippy::needless_borrow,
+    clippy::new_without_default,
+    clippy::useless_conversion
+)]
+#![forbid(rust_2018_idioms)]
+#![allow(clippy::inherent_to_string, clippy::type_complexity, improper_ctypes)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
-        let output = quote!(
-            #(#attrs)*
-            #vis #unsafety #abi #constness fn #ident() #output #block
+pub mod exports;
 
-            //turn the original function into DllMain
-            #[no_mangle]
-            #[allow(non_snake_case)]
-            pub extern "system" fn DllMain(
-                _hinstDLL: ::winapi::shared::minwindef::HINSTANCE,
-                fdwReason: ::winapi::shared::minwindef::DWORD,
-                _lpvReserved: ::winapi::shared::minwindef::LPVOID,
-            ) -> ::winapi::shared::minwindef::BOOL {
-                if fdwReason == ::winapi::um::winnt::DLL_PROCESS_ATTACH {
-                    //call the original function
-                    ::proxy_sys::exports::initialize(_hinstDLL).unwrap_or_else(|e| {
-                        ::std::panic!("{}", e);
-                    });
-                    #ident()
-                }
-                1
-            }
-            
-        );
+pub use proxy::proxy;
 
-        return output.into();
-    }
-
-    function
-}
+pub use winapi::{
+    shared::minwindef::{BOOL, DWORD, HINSTANCE, LPVOID, TRUE},
+    um::winnt::DLL_PROCESS_ATTACH,
+};
