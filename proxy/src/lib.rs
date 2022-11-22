@@ -35,7 +35,9 @@ pub fn proxy(_attribute: TokenStream, function: TokenStream) -> TokenStream {
             ) -> ::winapi::shared::minwindef::BOOL {
                 if fdwReason == ::winapi::um::winnt::DLL_PROCESS_ATTACH {
                     //call the original function
-                    ::proxy_sys::exports::initialize(_hinstDLL).unwrap();
+                    ::proxy_sys::exports::initialize(_hinstDLL).unwrap_or_else(|e| {
+                        ::std::panic!("{}", e);
+                    });
                     #ident()
                 }
                 1

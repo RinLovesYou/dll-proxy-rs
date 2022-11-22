@@ -2,4 +2,5 @@
 members = [
     "proxy",
     "proxy-sys",
+    "example"
 ]
