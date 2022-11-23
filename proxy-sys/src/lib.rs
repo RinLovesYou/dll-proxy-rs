@@ -10,18 +10,6 @@
 //!     - `x86_64-pc-windows-msvc`
 //!     - `i686-pc-windows-msvc`
 //!
-//!
-//! # Example
-//!
-//! ```
-//! use proxy_dll::proxy;
-//!
-//! #[proxy]
-//! fn main() {
-//!    msgbox::create("Hello, world!", "Hello Rust", msgbox::IconType::None).unwrap();
-//! }
-//! ```
-//!
 //! # Safety
 //!
 //! This crate is pretty unsafe

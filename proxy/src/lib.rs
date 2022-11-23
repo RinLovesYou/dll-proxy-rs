@@ -18,7 +18,7 @@
 //!
 //! #[proxy]
 //! fn main() {
-//!    msgbox::create("Hello, world!", "Hello Rust", msgbox::IconType::None).unwrap();
+//!    println!("Hello, world!");
 //! }
 //! ```
 //!

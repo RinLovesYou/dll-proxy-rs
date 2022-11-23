@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "demo",
     "proxy",
     "proxy-sys",
 ]
