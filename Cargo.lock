@@ -26,16 +26,14 @@ name = "proxy-dll"
 version = "0.2.4"
 dependencies = [
  "ctor",
- "proxy-sys 0.2.1",
+ "proxy-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",
  "winapi",
 ]
 
 [[package]]
 name = "proxy-sys"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "597b2b58cd08e4d3695e6f092815b3b8e6f0d56bc51ffb80528a18a4bb41e827"
+version = "0.2.2"
 dependencies = [
  "syn",
 ]
@@ -43,6 +41,8 @@ dependencies = [
 [[package]]
 name = "proxy-sys"
 version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef9628341c0c4cf46b877dbfb65b7cc9d8ced89102afd401c77f2edf3bd61398"
 dependencies = [
  "syn",
 ]
