@@ -23,7 +23,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-dll"
-version = "0.2.4"
+version = "0.2.5"
 dependencies = [
  "ctor",
  "proxy-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",

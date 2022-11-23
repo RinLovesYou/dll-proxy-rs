@@ -1,6 +1,6 @@
 [package]
 name = "proxy-dll"
-version = "0.2.4"
+version = "0.2.5"
 authors = ["RinLovesYou"]
 edition = "2021"
 description = "A dynamic Windows System DLL proxy"
