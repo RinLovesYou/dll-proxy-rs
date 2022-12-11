@@ -38,11 +38,6 @@ use syn::__private::{quote::quote, TokenStream};
 ///
 #[proc_macro_attribute]
 pub fn proxy(_attribute: TokenStream, function: TokenStream) -> TokenStream {
-    #[cfg(not(target_env = "msvc"))]
-    {
-        compile_error!("This crate only supports msvc targets, for now.");
-    }
-
     let fn_ts = function.clone();
     let item: syn::Item = syn::parse_macro_input!(fn_ts);
     if let syn::Item::Fn(function) = item {
