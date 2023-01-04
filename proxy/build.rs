@@ -10,14 +10,12 @@
 ///
 /// was suggested, however this does not seem to be a viable option, the linker seems to swallow this.
 fn main() {
-    #[cfg(target_os = "windows")]
-    {
-        use std::path::Path;
-        let lib_path = Path::new("deps").join("Exports.def");
-        let absolute_path = std::fs::canonicalize(&lib_path).unwrap();
-        println!(
-            "cargo:rustc-cdylib-link-arg=/DEF:{}",
-            absolute_path.display()
-        );
-    }
+    println!("cargo:warning=Linking Exports File..");
+    use std::path::Path;
+    let lib_path = Path::new("deps").join("Exports.def");
+    let absolute_path = std::fs::canonicalize(&lib_path).unwrap();
+    println!(
+        "cargo:rustc-cdylib-link-arg=/DEF:{}",
+        absolute_path.display()
+    );
 }
