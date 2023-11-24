@@ -4,7 +4,7 @@ use std::{
     arch::global_asm,
     error,
     ffi::{CStr, CString},
-    path::{PathBuf, Path},
+    path::{Path, PathBuf},
 };
 
 use thiserror::Error;
@@ -13,28 +13,31 @@ use winapi::{
     um::libloaderapi::{GetProcAddress, LoadLibraryA},
 };
 
+#[cfg(feature = "version")]
 #[no_mangle]
 static mut OriginalFuncs_version: [FARPROC; 17] = [0 as FARPROC; 17];
 
+#[cfg(feature = "winhttp")]
 #[no_mangle]
 static mut OriginalFuncs_winhttp: [FARPROC; 65] = [0 as FARPROC; 65];
 
+#[cfg(feature = "winmm")]
 #[no_mangle]
 static mut OriginalFuncs_winmm: [FARPROC; 181] = [0 as FARPROC; 181];
 
-#[cfg(target_pointer_width = "64")]
+#[cfg(all(feature = "version", target_pointer_width = "64"))]
 global_asm!(include_str!("../deps/version.x64.S"));
-#[cfg(target_pointer_width = "32")]
+#[cfg(all(feature = "version", target_pointer_width = "32"))]
 global_asm!(include_str!("../deps/version.x86.S"));
 
-#[cfg(target_pointer_width = "64")]
+#[cfg(all(feature = "winhttp", target_pointer_width = "64"))]
 global_asm!(include_str!("../deps/winhttp.x64.S"));
-#[cfg(target_pointer_width = "32")]
+#[cfg(all(feature = "winhttp", target_pointer_width = "32"))]
 global_asm!(include_str!("../deps/winhttp.x86.S"));
 
-#[cfg(target_pointer_width = "64")]
+#[cfg(all(feature = "winmm", target_pointer_width = "64"))]
 global_asm!(include_str!("../deps/winmm.x64.S"));
-#[cfg(target_pointer_width = "32")]
+#[cfg(all(feature = "winmm", target_pointer_width = "32"))]
 global_asm!(include_str!("../deps/winmm.x86.S"));
 
 #[derive(Debug, Error)]
@@ -51,6 +54,7 @@ enum ExportError {
     InvalidFileName,
 }
 
+#[cfg(feature = "version")]
 const EXPORTS_VERSION: [&'static [u8]; 17] = [
     b"GetFileVersionInfoA\0",
     b"GetFileVersionInfoByHandle\0",
@@ -71,6 +75,7 @@ const EXPORTS_VERSION: [&'static [u8]; 17] = [
     b"VerQueryValueW\0",
 ];
 
+#[cfg(feature = "winhttp")]
 const EXPORTS_WINHTTP: [&'static [u8]; 27] = [
     b"EmptyWorkingSet\0",
     b"EnumDeviceDrivers\0",
@@ -101,6 +106,7 @@ const EXPORTS_WINHTTP: [&'static [u8]; 27] = [
     b"QueryWorkingSetEx\0",
 ];
 
+#[cfg(feature = "winmm")]
 const EXPORTS_WINMM: [&'static [u8]; 181] = [
     b"CloseDriver\0",
     b"DefDriverProc\0",
@@ -325,7 +331,22 @@ impl ProxyDll for HINSTANCE {
     fn is_compatible(&self) -> Result<bool, Box<dyn error::Error>> {
         let file_name = self.get_file_name()?;
 
-        Ok(file_name.eq("version.dll") || file_name.eq("winhttp.dll") || file_name.eq("winmm.dll"))
+        #[cfg(feature = "version")]
+        if file_name.eq("version.dll") {
+            return Ok(true);
+        }
+
+        #[cfg(feature = "winhttp")]
+        if file_name.eq("winhttp.dll") {
+            return Ok(true);
+        }
+
+        #[cfg(feature = "winmm")]
+        if file_name.eq("winmm.dll") {
+            return Ok(true);
+        }
+
+        Ok(false)
     }
 
     fn load_original(&self) -> Result<HINSTANCE, Box<dyn error::Error>> {
@@ -351,15 +372,15 @@ impl ProxyDll for HINSTANCE {
 }
 
 /// initializes the exports for the proxy
-/// 
+///
 /// this happens by calling `GetModuleFileName`, to find out which DLL we're trying to proxy
 /// if it's one we support, we load it from system32 and then call `GetProcAddress` on all the
 /// functions we want to proxy, those are stored in a static array, which is accessed by `global_asm!`
-/// 
+///
 /// if the DLL is not supported, we return an error
-/// 
+///
 /// # Safety
-/// 
+///
 /// this function is unsafe.
 pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
     if module.is_null() {
@@ -371,8 +392,11 @@ pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
     let name = module.get_file_name()?;
 
     let exports = match name.as_str() {
+        #[cfg(feature = "version")]
         "version.dll" => EXPORTS_VERSION.to_vec(),
+        #[cfg(feature = "winhttp")]
         "winhttp.dll" => EXPORTS_WINHTTP.to_vec(),
+        #[cfg(feature = "winmm")]
         "winmm.dll" => EXPORTS_WINMM.to_vec(),
         _ => return Err(Box::new(ExportError::InvalidFileName)),
     };
@@ -381,14 +405,17 @@ pub fn initialize(module: HINSTANCE) -> Result<(), Box<dyn error::Error>> {
         let export = unsafe { CStr::from_bytes_with_nul_unchecked(export) }.as_ptr();
 
         match name.as_str() {
+            #[cfg(feature = "version")]
             "version.dll" => unsafe {
                 OriginalFuncs_version[index] = GetProcAddress(original, export);
             },
 
+            #[cfg(feature = "winhttp")]
             "winhttp.dll" => unsafe {
                 OriginalFuncs_winhttp[index] = GetProcAddress(original, export);
             },
 
+            #[cfg(feature = "winmm")]
             "winmm.dll" => unsafe {
                 OriginalFuncs_winmm[index] = GetProcAddress(original, export);
             },
